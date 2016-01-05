@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -51,10 +52,15 @@ public class MovieFragment extends Fragment {
         mGridData = new ArrayList<>();
         mGridAdapter = new GridViewAdapter(getActivity(), R.layout.grid_item_layout, mGridData);
         mGridView.setAdapter(mGridAdapter);
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
 
-
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(rootView.getContext(), mGridAdapter.getItem(position).getTitle(), Toast.LENGTH_SHORT).show();
+            }
+        });
         return rootView;
-    }
+}
     private String[] getMovieDataFromJson(String movieJsonStr)
             throws JSONException {
         GridItem item;
@@ -91,6 +97,7 @@ public class MovieFragment extends Fragment {
             imagePath = IMAGE_BASE_URL + movieObject.getString(TMD_IMAGE);
             item = new GridItem();
             item.setImage(imagePath);
+            item.setTitle(title);
             mGridData.add(item);
             resultStrs[i] = title + "@!@" + release  + "@!@" + rating + "@!@" + imagePath + "@!@" + plot;
         }

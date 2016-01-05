@@ -10,7 +10,7 @@
         <ImageView
             android:id="@+id/grid_item_image"
             android:layout_width="116dp"
-            android:layout_height="150dp"
+            android:layout_height="160dp"
             android:scaleType="centerCrop"/>
 
 
