@@ -8,6 +8,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
+import android.widget.ProgressBar;
+import android.widget.Toast;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,91 +22,85 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.util.ArrayList;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MovieFragment extends Fragment {
     private final String LOG_TAG = MovieFragment.class.getSimpleName();
+
+    private GridView mGridView;
+    private ProgressBar mProgressBar;
+    private GridViewAdapter mGridAdapter;
+    private ArrayList<GridItem> mGridData;
+
+    //private ArrayList<GridItem> mGridData;
     public MovieFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_main, container, false);
+        final View rootView =  inflater.inflate(R.layout.fragment_main, container, false);
+
+        mGridView = (GridView)  rootView.findViewById(R.id.gridView);
+        mProgressBar = (ProgressBar) rootView.findViewById(R.id.progressBar);
+
+        //Initialize with empty data
+        mGridData = new ArrayList<>();
+        mGridAdapter = new GridViewAdapter(getActivity(), R.layout.grid_item_layout, mGridData);
+        mGridView.setAdapter(mGridAdapter);
+
+
+        return rootView;
     }
-/*    private String[] getWeatherDataFromJson(String forecastJsonStr, int numDays)
+    private String[] getMovieDataFromJson(String movieJsonStr)
             throws JSONException {
-
+        GridItem item;
         // These are the names of the JSON objects that need to be extracted.
-        final String OWM_LIST = "list";
-        final String OWM_WEATHER = "weather";
-        final String OWM_TEMPERATURE = "temp";
-        final String OWM_MAX = "max";
-        final String OWM_MIN = "min";
-        final String OWM_DESCRIPTION = "main";
+        final String TMD_RESULTS = "results";
+        final int PAGE_COUNT = 20;
+        final String TMD_PAGE = "page";
+        final String TMD_TITLE = "original_title";
+        final String TMD_PLOT = "overview";
+        final String TMD_USER_RATING = "vote_average";
+        final String TMD_RELEASE_DATE = "release_date";
+        final String TMD_IMAGE = "poster_path";
+        final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w185";
 
-        JSONObject forecastJson = new JSONObject(forecastJsonStr);
-        JSONArray weatherArray = forecastJson.getJSONArray(OWM_LIST);
-
-        // OWM returns daily forecasts based upon the local time of the city that is being
-        // asked for, which means that we need to know the GMT offset to translate this data
-        // properly.
-
-        // Since this data is also sent in-order and the first day is always the
-        // current day, we're going to take advantage of that to get a nice
-        // normalized UTC date for all of our weather.
-
-        Time dayTime = new Time();
-        dayTime.setToNow();
-
-        // we start at the day returned by local time. Otherwise this is a mess.
-        int julianStartDay = Time.getJulianDay(System.currentTimeMillis(), dayTime.gmtoff);
-
-        // now we work exclusively in UTC
-        dayTime = new Time();
-
-        String[] resultStrs = new String[numDays];
-        for(int i = 0; i < weatherArray.length(); i++) {
-            // For now, using the format "Day, description, hi/low"
-            String day;
-            String description;
-            String highAndLow;
-
-            // Get the JSON object representing the day
-            JSONObject dayForecast = weatherArray.getJSONObject(i);
-
-            // The date/time is returned as a long.  We need to convert that
-            // into something human-readable, since most people won't read "1400356800" as
-            // "this saturday".
-            long dateTime;
-            // Cheating to convert this to UTC time, which is what we want anyhow
-            dateTime = dayTime.setJulianDay(julianStartDay+i);
-            day = getReadableDateString(dateTime);
-
-            // description is in a child array called "weather", which is 1 element long.
-            JSONObject weatherObject = dayForecast.getJSONArray(OWM_WEATHER).getJSONObject(0);
-            description = weatherObject.getString(OWM_DESCRIPTION);
-
-            // Temperatures are in a child object called "temp".  Try not to name variables
-            // "temp" when working with temperature.  It confuses everybody.
-            JSONObject temperatureObject = dayForecast.getJSONObject(OWM_TEMPERATURE);
+        JSONObject movieJson = new JSONObject(movieJsonStr);
+        JSONArray movieArray = movieJson.getJSONArray(TMD_RESULTS);
 
 
-            double high = temperatureObject.getDouble(OWM_MAX);
-            double low = temperatureObject.getDouble(OWM_MIN);
+        String[] resultStrs = new String[movieArray.length()];
+        for(int i = 0; i < movieArray.length(); i++) {
 
-            highAndLow = formatHighLows(high, low);
-            resultStrs[i] = day + " - " + description + " - " + highAndLow;
+            String title;
+            String plot;
+            String release;
+            String imagePath;
+            String rating;
+
+            JSONObject movieObject = movieArray.getJSONObject(i);
+
+            title = movieObject.getString(TMD_TITLE);
+            plot = movieObject.getString(TMD_PLOT);
+            release = movieObject.getString(TMD_RELEASE_DATE);
+            rating =  movieObject.getString(TMD_USER_RATING);
+            imagePath = IMAGE_BASE_URL + movieObject.getString(TMD_IMAGE);
+            item = new GridItem();
+            item.setImage(imagePath);
+            mGridData.add(item);
+            resultStrs[i] = title + "@!@" + release  + "@!@" + rating + "@!@" + imagePath + "@!@" + plot;
         }
 
         for (String s : resultStrs) {
-            //Log.v(LOG_TAG, "Forecast entry: " + s);
+            Log.v(LOG_TAG, "Movie entry: " + s);
         }
         return resultStrs;
 
-    }*/
+    }
     @Override
     public void onStart(){
         super.onStart();
@@ -188,19 +189,34 @@ public class MovieFragment extends Fragment {
                     }
                 }
             }
-            //try {
-                //String[] weatherStrings =  getWeatherDataFromJson(forecastJsonStr, numDays);
-                //Log.v(LOG_TAG, "weather string: " + weatherStrings[0]);
-               // return new String[0];
-                //return weatherStrings;
-            //} catch (JSONException e) {
-               // Log.e(LOG_TAG, "exception creating array of stirngs from Json response", e);
-           // }
+            try {
+                String[] movieStrings =  getMovieDataFromJson(movieJsonStr);
+                Log.v(LOG_TAG, "movie string: " + movieStrings[0]);
+                String firstMovie = movieStrings[0];
+                for (String retval: firstMovie.split("@!@")){
+                    Log.v(LOG_TAG, "split string: " + retval);
+                }
+
+
+                return movieStrings;
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, "exception creating array of stirngs from Json response", e);
+            }
 
             return new String[0];
 
         }
 
+
+        protected void onPostExecute(Integer result) {
+            // Download complete. Let us update UI
+            if (result == 1) {
+                mGridAdapter.setGridData(mGridData);
+            } else {
+                Toast.makeText(getActivity(), "Failed to fetch data!", Toast.LENGTH_SHORT).show();
+            }
+            mProgressBar.setVisibility(View.GONE);
+        }
 
     }
 }
