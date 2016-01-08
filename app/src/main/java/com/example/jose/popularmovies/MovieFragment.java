@@ -60,6 +60,7 @@ public class MovieFragment extends Fragment {
                 //Toast.makeText(rootView.getContext(), mGridAdapter.getItem(position).getTitle(), Toast.LENGTH_SHORT).show();
                 Intent detailIntent = new Intent(getActivity(), MovieDetailActivity.class);
                 detailIntent.putExtra(Intent.EXTRA_TEXT, mGridAdapter.getItem(position).getTitle());
+                detailIntent.putExtra("EXTRA_IMAGE_PATH", mGridAdapter.getItem(position).getImage());
                 startActivity(detailIntent);
             }
         });

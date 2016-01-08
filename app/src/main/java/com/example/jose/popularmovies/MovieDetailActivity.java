@@ -10,7 +10,10 @@ import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.squareup.picasso.Picasso;
 
 public class MovieDetailActivity extends AppCompatActivity {
 
@@ -39,6 +42,7 @@ public class MovieDetailActivity extends AppCompatActivity {
 
     public static class MovieDetailActivityFragment extends Fragment {
         private String mTempTitleStr;
+        private String mTempImageStr;
         private static final String LOG_TAG = MovieDetailActivityFragment.class.getSimpleName();
 
         public MovieDetailActivityFragment() {
@@ -49,11 +53,19 @@ public class MovieDetailActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             Intent intent = getActivity().getIntent();
             View rootView =  inflater.inflate(R.layout.fragment_movie_detail, container, false);
-            if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT)){
+            if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT) ){
                 mTempTitleStr = intent.getStringExtra(Intent.EXTRA_TEXT);
                 TextView textView = (TextView)rootView.findViewById(R.id.detail_title);
                 textView.setText(mTempTitleStr);
+                if (intent.hasExtra("EXTRA_IMAGE_PATH")){
+                    mTempImageStr = intent.getStringExtra("EXTRA_IMAGE_PATH");
+                    ImageView imageView = (ImageView) rootView.findViewById(R.id.detail_item_image);
+                    Picasso.with(getContext())
+                            .load(mTempImageStr)
+                            .into(imageView);
+                }
             }
+
 
             return rootView;
         }
