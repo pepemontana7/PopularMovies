@@ -59,8 +59,11 @@ public class MovieFragment extends Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 //Toast.makeText(rootView.getContext(), mGridAdapter.getItem(position).getTitle(), Toast.LENGTH_SHORT).show();
                 Intent detailIntent = new Intent(getActivity(), MovieDetailActivity.class);
-                detailIntent.putExtra(Intent.EXTRA_TEXT, mGridAdapter.getItem(position).getTitle());
-                detailIntent.putExtra("EXTRA_IMAGE_PATH", mGridAdapter.getItem(position).getImage());
+                detailIntent.putExtra(getString(R.string.title_key), mGridAdapter.getItem(position).getTitle());
+                detailIntent.putExtra(getString(R.string.plot_key), mGridAdapter.getItem(position).getPlot());
+                detailIntent.putExtra(getString(R.string.image_key), mGridAdapter.getItem(position).getImage());
+                detailIntent.putExtra(getString(R.string.release_key), mGridAdapter.getItem(position).getReleaseDate());
+                detailIntent.putExtra(getString(R.string.rating_key), mGridAdapter.getItem(position).getUserRating());
                 startActivity(detailIntent);
             }
         });
@@ -103,6 +106,9 @@ public class MovieFragment extends Fragment {
             item = new GridItem();
             item.setImage(imagePath);
             item.setTitle(title);
+            item.setPlot(plot);
+            item.setReleaseDate(release);
+            item.setUserRating(rating);
             mGridData.add(item);
             resultStrs[i] = title + "@!@" + release  + "@!@" + rating + "@!@" + imagePath + "@!@" + plot;
         }

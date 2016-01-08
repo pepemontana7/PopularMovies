@@ -49,8 +49,11 @@ public class MovieDetailActivity extends AppCompatActivity {
     }
 
     public static class MovieDetailActivityFragment extends Fragment {
-        private String mTempTitleStr;
-        private String mTempImageStr;
+        private String mTitleStr;
+        private String mImageStr;
+        private String mPlotStr;
+        private String mRatingStr;
+        private String mReleaseStr;
         private static final String LOG_TAG = MovieDetailActivityFragment.class.getSimpleName();
 
         public MovieDetailActivityFragment() {
@@ -61,16 +64,32 @@ public class MovieDetailActivity extends AppCompatActivity {
                                  Bundle savedInstanceState) {
             Intent intent = getActivity().getIntent();
             View rootView =  inflater.inflate(R.layout.fragment_movie_detail, container, false);
-            if (intent != null && intent.hasExtra(Intent.EXTRA_TEXT) ){
-                mTempTitleStr = intent.getStringExtra(Intent.EXTRA_TEXT);
-                TextView textView = (TextView)rootView.findViewById(R.id.detail_title);
-                textView.setText(mTempTitleStr);
-                if (intent.hasExtra("EXTRA_IMAGE_PATH")){
-                    mTempImageStr = intent.getStringExtra("EXTRA_IMAGE_PATH");
+            if (intent != null && intent.hasExtra(getString(R.string.title_key)) ){
+                mTitleStr = intent.getStringExtra(getString(R.string.title_key));
+                TextView titleTextView = (TextView)rootView.findViewById(R.id.detail_title);
+                titleTextView.setText(mTitleStr);
+                if (intent.hasExtra(getString(R.string.image_key))){
+                    mImageStr = intent.getStringExtra(getString(R.string.image_key));
                     ImageView imageView = (ImageView) rootView.findViewById(R.id.detail_item_image);
                     Picasso.with(getContext())
-                            .load(mTempImageStr)
+                            .load(mImageStr)
                             .into(imageView);
+                }
+                if (intent.hasExtra(getString(R.string.plot_key))){
+                    mPlotStr = intent.getStringExtra(getString(R.string.plot_key));
+                    TextView plotTextView = (TextView)rootView.findViewById(R.id.plot);
+                    plotTextView.setText(mPlotStr);
+                }
+                if (intent.hasExtra(getString(R.string.rating_key))){
+                    mRatingStr = intent.getStringExtra(getString(R.string.rating_key));
+                    TextView ratingTextView = (TextView)rootView.findViewById(R.id.userRating);
+                    ratingTextView.setText(mRatingStr);
+
+                }
+                if (intent.hasExtra(getString(R.string.release_key))){
+                    mReleaseStr = intent.getStringExtra(getString(R.string.release_key));
+                    TextView releaseTextView = (TextView)rootView.findViewById(R.id.releaseDate);
+                    releaseTextView.setText(mReleaseStr);
                 }
             }
 
