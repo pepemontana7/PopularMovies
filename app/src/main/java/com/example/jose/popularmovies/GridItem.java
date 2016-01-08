@@ -6,6 +6,9 @@ package com.example.jose.popularmovies;
 public class GridItem {
     private String image;
     private String title;
+    private String plot;
+    private String userRating;
+    private String releaseDate;
 
     public GridItem() {
         super();
@@ -26,4 +29,29 @@ public class GridItem {
     public void setTitle(String title) {
         this.title = title;
     }
+
+    public String getPlot() {
+        return plot;
+    }
+
+    public void setPlot(String plot) {
+        this.plot = plot;
+    }
+
+    public String getUserRating() {
+        return userRating;
+    }
+
+    public void setUserRating(String userRating) {
+        this.userRating = userRating;
+    }
+
+    public String getReleaseDate() {
+        return releaseDate;
+    }
+
+    public void setReleaseDate(String releaseDate) {
+        this.releaseDate = releaseDate;
+    }
+
 }
