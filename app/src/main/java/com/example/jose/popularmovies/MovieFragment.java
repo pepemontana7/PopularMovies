@@ -111,6 +111,7 @@ public class MovieFragment extends Fragment {
             item.setUserRating(rating);
             mGridData.add(item);
             resultStrs[i] = title + "@!@" + release  + "@!@" + rating + "@!@" + imagePath + "@!@" + plot;
+            Log.v(LOG_TAG, "strings count: " + resultStrs.length);
         }
 
         for (String s : resultStrs) {
@@ -131,11 +132,11 @@ public class MovieFragment extends Fragment {
         //        getString(R.string.pref_location_default));
         movieTask.execute(getString(R.string.sort_by_popularity));
     }
-    public class FetchMovieTask extends AsyncTask<String, Void, String[]> {
+    public class FetchMovieTask extends AsyncTask<String, Void, Integer> {
 
 
         @Override
-        protected String[] doInBackground(String... params ) {
+        protected Integer doInBackground(String... params ) {
             if (params.length == 0){
                 return null;
             }
@@ -148,7 +149,7 @@ public class MovieFragment extends Fragment {
             String format = "json";
             //String sortBy = String.valueOf(R.string.sort_by_popularity);
             String sortBy =  params[0];
-
+            Integer result = 0;
             try {
 
                 final String MOVIE_BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
@@ -214,14 +215,15 @@ public class MovieFragment extends Fragment {
                 for (String retval: firstMovie.split("@!@")){
                     Log.v(LOG_TAG, "split string: " + retval);
                 }
+                result = 1;
 
-
-                return movieStrings;
+                //return movieStrings;
             } catch (JSONException e) {
+                result = 0;
                 Log.e(LOG_TAG, "exception creating array of stirngs from Json response", e);
             }
 
-            return new String[0];
+            return result;
 
         }
 
