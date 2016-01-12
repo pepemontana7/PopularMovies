@@ -1,9 +1,11 @@
 package com.example.jose.popularmovies;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -127,10 +129,11 @@ public class MovieFragment extends Fragment {
     }
     private void updateMovie(){
         FetchMovieTask movieTask = new FetchMovieTask() ;
-        //SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        //String postalCode = sharedPref.getString(getString(R.string.pref_location_key),
-        //        getString(R.string.pref_location_default));
-        movieTask.execute(getString(R.string.sort_by_popularity));
+        SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String sortBy = sharedPref.getString(getString(R.string.pref_sortby_key),
+                getString(R.string.pref_sortby_default));
+        Log.v(LOG_TAG, "sort by: " + sortBy);
+        movieTask.execute(sortBy);
     }
     public class FetchMovieTask extends AsyncTask<String, Void, Integer> {
 
@@ -155,11 +158,16 @@ public class MovieFragment extends Fragment {
                 final String MOVIE_BASE_URL = "http://api.themoviedb.org/3/discover/movie?";
                 final String SORT_PARAM = "sort_by";
                 final String APPID_PARAM = "api_key";
+                final String VOTE_COUNT_PARAM = "vote_count.gte";
+                final String MIN_VOTES = "100";
 
                 Uri builtUrl = Uri.parse(MOVIE_BASE_URL).buildUpon()
                         .appendQueryParameter(SORT_PARAM, sortBy)
-                        .appendQueryParameter(APPID_PARAM, BuildConfig.OPEN_THE_MOVIE_DB_API_KEY)
-                        .build();
+                        .appendQueryParameter(APPID_PARAM, BuildConfig.OPEN_THE_MOVIE_DB_API_KEY).build();
+                if(sortBy.equals(String.valueOf(R.string.sort_by_rated))){
+                    builtUrl.buildUpon().appendQueryParameter(VOTE_COUNT_PARAM, MIN_VOTES).build();
+                }
+
                 URL url = new URL(builtUrl.toString());
                 Log.v(LOG_TAG,"URL Builder url: " + url);
 

@@ -1,11 +1,21 @@
 <resources>
+    <string name="title_activity_settings">SettingsActivity</string>
     <string name="app_name">PopularMovies</string>
     <string name="action_settings">Settings</string>
+    <string name="action_sortby">Sort By</string>
     <string name="sort_by_popularity">popularity.desc</string>
+    <string name="sort_by_rated">vote_average.desc</string>
     <string name="title_activity_movie_detail">MovieDetailActivity</string>
     <string name="plot_key">EXTRA_PLOT</string>
     <string name="title_key">EXTRA_TITLE</string>
     <string name="rating_key">EXTRA_RATING</string>
     <string name="release_key">EXTRA_RELEASE</string>
     <string name="image_key">EXTRA_IMAGE_PATH</string>
+
+    <string name="pref_sortby_label">Location</string>
+    <!-- Key name for storing location in SharedPreferences [CHAR LIMIT=NONE] -->
+    <string name="pref_sortby_key" translatable="false">sortby</string>
+
+    <!-- Default postal code for location preference [CHAR LIMIT=NONE] -->
+    <string name="pref_sortby_default" translatable="false">popularity.desc</string>
 </resources>
