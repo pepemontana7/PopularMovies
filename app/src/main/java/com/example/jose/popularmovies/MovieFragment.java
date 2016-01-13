@@ -127,6 +127,16 @@ public class MovieFragment extends Fragment {
         super.onStart();
         updateMovie();
     }
+
+    @Override
+    public void onResume()
+    {  // After a pause OR at startup
+        super.onResume();
+        //Refresh your stuff here
+        mGridData.clear();
+         
+    }
+
     private void updateMovie(){
         FetchMovieTask movieTask = new FetchMovieTask() ;
         SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -164,8 +174,9 @@ public class MovieFragment extends Fragment {
                 Uri builtUrl = Uri.parse(MOVIE_BASE_URL).buildUpon()
                         .appendQueryParameter(SORT_PARAM, sortBy)
                         .appendQueryParameter(APPID_PARAM, BuildConfig.OPEN_THE_MOVIE_DB_API_KEY).build();
-                if(sortBy.equals(String.valueOf(R.string.sort_by_rated))){
-                    builtUrl.buildUpon().appendQueryParameter(VOTE_COUNT_PARAM, MIN_VOTES).build();
+                Log.v(LOG_TAG,"true sort: " + String.valueOf(sortBy.equals(getString(R.string.sort_by_rated))));
+                if(sortBy.equals(getString(R.string.sort_by_rated))){
+                    builtUrl = Uri.parse(builtUrl.toString()).buildUpon().appendQueryParameter(VOTE_COUNT_PARAM, MIN_VOTES).build();
                 }
 
                 URL url = new URL(builtUrl.toString());

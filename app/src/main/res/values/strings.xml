@@ -12,7 +12,7 @@
     <string name="release_key">EXTRA_RELEASE</string>
     <string name="image_key">EXTRA_IMAGE_PATH</string>
 
-    <string name="pref_sortby_label">Location</string>
+    <string name="pref_sortby_label">Sort By</string>
     <!-- Key name for storing location in SharedPreferences [CHAR LIMIT=NONE] -->
     <string name="pref_sortby_key" translatable="false">sortby</string>
 
