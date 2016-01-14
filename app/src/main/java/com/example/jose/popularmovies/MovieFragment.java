@@ -137,7 +137,7 @@ public class MovieFragment extends Fragment {
         super.onResume();
         Log.v(LOG_TAG, "On RESUME MOV FRAG: ");
         //Refresh your stuff here
-
+        mGridData.clear();
          
     }
 
