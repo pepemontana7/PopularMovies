@@ -41,6 +41,7 @@ public class MovieFragment extends Fragment {
 
     //private ArrayList<GridItem> mGridData;
     public MovieFragment() {
+
     }
 
     @Override
@@ -113,7 +114,7 @@ public class MovieFragment extends Fragment {
             item.setUserRating(rating);
             mGridData.add(item);
             resultStrs[i] = title + "@!@" + release  + "@!@" + rating + "@!@" + imagePath + "@!@" + plot;
-            Log.v(LOG_TAG, "strings count: " + resultStrs.length);
+            //Log.v(LOG_TAG, "strings count: " + resultStrs.length);
         }
 
         for (String s : resultStrs) {
@@ -124,16 +125,19 @@ public class MovieFragment extends Fragment {
     }
     @Override
     public void onStart(){
+        Log.v(LOG_TAG, "On START MOV FRAG: "  );
         super.onStart();
         updateMovie();
     }
 
     @Override
     public void onResume()
+
     {  // After a pause OR at startup
         super.onResume();
+        Log.v(LOG_TAG, "On RESUME MOV FRAG: ");
         //Refresh your stuff here
-        mGridData.clear();
+
          
     }
 
